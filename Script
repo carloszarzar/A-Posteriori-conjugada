@@ -1,0 +1,41 @@
+#-----------------------#-----------------------#-----------------------
+#########################################################
+# A posteriori de duas distribuições Normais conjugadas #
+#########################################################
+# Atuor: Carlos Antônio Zarzar
+# Data: 31/03/2020
+# Objetivo: 
+## Estudar a precisão/variância da distribuição a priori
+## e a influência sobre as demais distribuições do teorema de Bayes
+#-----------------------#-----------------------#-----------------------
+rm(list = ls())
+# Valores do parâmetro investigado
+set.seed(2020)
+n = 100
+param = seq(0, 50, length = n)
+
+# Informação: A priori
+nu_prior = 25 # média
+sd_prior = 2 # desvio padrão (Aumentar varianc priori aproxima post para vero (inf dados))
+# prec_prior = 1/sd_prior^2 # Precisao
+prior <- dnorm(param,nu_prior,sd_prior)
+
+# Informação contida nos dados: verossimilhança
+nu_vero = 20 # média
+sd_vero = 3 # desvio padrão
+# prec_vero = 1/sd_vero^2 # Precisão
+like <- dnorm(param,nu_vero,sd_vero)
+
+# A posteriori / Esperança e variancia (desvio padrao) para exemplo de normais dado
+nu_post = ((sd_prior^2*nu_vero)/(sd_prior^2+sd_vero^2)) + ((sd_vero*nu_prior)/(sd_vero^2+sd_prior^2))
+sd_post = sqrt((sd_vero^2*sd_prior^2)/(sd_vero^2*sd_prior^2))
+post <- dnorm(param,nu_post,sd_post)
+
+
+# plot gráfico
+plot(param,post,type="l",ylab="Densidade", xlab="Parâmetro valor",lty=1,lwd=3,
+     col=1,ylim=c(0,.6))
+lines(param,like,lty=2,lwd=3, col=4)
+lines(param,prior,lty=3,lwd=3, col=2)
+legend(40,.5,c("Post","Veross.","Priori."), lty=c(1,2,3),lwd=c(3,3,3),col=c(1,4,2))
+#-----------------------#-----------------------#-----------------------
